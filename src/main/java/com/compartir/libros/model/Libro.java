@@ -13,6 +13,8 @@ import org.bson.types.ObjectId;
 public class Libro {
     private String titulo;
     private String autor;
+    private String descripcion;
+    private String portada;
     private String estado; // disponible, prestado, reservado
     private List<ObjectId> tematicas;
     private List<Reserva> reservas;

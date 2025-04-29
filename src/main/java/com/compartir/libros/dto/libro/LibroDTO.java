@@ -13,6 +13,8 @@ import com.compartir.libros.model.Reserva;
 public class LibroDTO {
     private String titulo;
     private String autor;
+    private String descripcion;
+    private String portada;
     private String estado;
     private List<String> tematicas;
     private List<Reserva> reservas;

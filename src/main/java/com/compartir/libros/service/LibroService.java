@@ -46,6 +46,8 @@ public class LibroService {
         libro.setTitulo(libroRequest.getTitulo());
         libro.setAutor(libroRequest.getAutor());
         libro.setEstado("disponible");
+        libro.setDescripcion(libroRequest.getDescripcion());
+        libro.setPortada(libroRequest.getPortada());
         libro.setTematicas(tematicas.stream().map(Tematica::getId).toList());
         libro.setReservas(new ArrayList<>());
 
@@ -72,6 +74,8 @@ public class LibroService {
         Libro libro = usuario.getLibros().get(indice);
         libro.setTitulo(libroRequest.getTitulo());
         libro.setAutor(libroRequest.getAutor());
+        libro.setDescripcion(libroRequest.getDescripcion());
+        libro.setPortada(libroRequest.getPortada());
         libro.setTematicas(tematicas.stream().map(Tematica::getId).toList());
 
         usuarioRepository.save(usuario);
@@ -166,6 +170,8 @@ public class LibroService {
                     LibroDTO libroDTO = new LibroDTO(
                         libro.getTitulo(),
                         libro.getAutor(),
+                        libro.getDescripcion(),
+                        libro.getPortada(),
                         libro.getEstado(),
                         libro.getTematicas().stream()
                                             .map(ObjectId::toHexString)
@@ -189,6 +195,8 @@ public class LibroService {
             libro.getTitulo(),
             libro.getAutor(),
             libro.getEstado(),
+            libro.getDescripcion(),
+            libro.getPortada(),
             libro.getTematicas().stream()
                 .map(ObjectId::toHexString)
                 .toList(),

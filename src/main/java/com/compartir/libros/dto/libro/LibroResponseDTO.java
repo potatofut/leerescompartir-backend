@@ -13,6 +13,8 @@ public class LibroResponseDTO {
     private String titulo;
     private String autor;
     private String estado;
+    private String descripcion;
+    private String portada;
     private List<String> tematicas;
     private List<Reserva> reservas;
 }

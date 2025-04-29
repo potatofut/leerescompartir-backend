@@ -13,6 +13,10 @@ public class LibroRequestDTO {
     
     @NotBlank(message = "El autor no puede estar vacío")
     private String autor;
+
+    private String descripcion;
+
+    private String portada;
     
     @NotEmpty(message = "Debe seleccionar al menos una temática")
     private List<String> tematicas;
