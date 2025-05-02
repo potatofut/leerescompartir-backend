@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.compartir.libros.dto.libro.CambioEstadoRequest;
 import com.compartir.libros.dto.libro.LibroDTO;
+import com.compartir.libros.dto.libro.LibroPrestamoDTO;
 import com.compartir.libros.dto.libro.LibroRequestDTO;
+import com.compartir.libros.dto.libro.LibroReservaRequestDTO;
 import com.compartir.libros.dto.libro.LibroResponseDTO;
 import com.compartir.libros.service.LibroService;
 
@@ -54,14 +56,14 @@ public class LibroController {
         return ResponseEntity.ok(libroService.cambiarEstadoLibro(authentication.getName(), indice, request));
     }
 
-    @GetMapping("/tematica/{tematicaId}")
-    public ResponseEntity<List<LibroDTO>> obtenerLibrosPorTematica(
-            @PathVariable String tematicaId,
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<LibroDTO>> filtrarLibros(
+            @RequestParam(required = false) String tematicaId,
             @RequestParam(required = false) String estado,
             @RequestParam(required = false) String pais,
             @RequestParam(required = false) String provincia,
             @RequestParam(required = false) String ciudad) {
-        return ResponseEntity.ok(libroService.buscarLibrosPorTematica(tematicaId, estado, pais, provincia, ciudad));
+        return ResponseEntity.ok(libroService.filtrarLibros(tematicaId, estado, pais, provincia, ciudad));
     }
 
     @GetMapping("/buscar/titulo")
@@ -72,5 +74,22 @@ public class LibroController {
     @GetMapping("/buscar/autor")
     public ResponseEntity<List<LibroDTO>> buscarLibrosPorAutor(@RequestParam String autor) {
         return ResponseEntity.ok(libroService.buscarLibrosPorAutor(autor));
+    }
+
+    @GetMapping("/prestados")
+    public ResponseEntity<List<LibroPrestamoDTO>> obtenerLibrosPrestados(Authentication authentication) {
+        return ResponseEntity.ok(libroService.obtenerLibrosPrestados(authentication.getName()));
+    }
+
+    @PostMapping("/devolver")
+    public ResponseEntity<Void> devolverLibro(Authentication authentication, @Valid @RequestBody LibroPrestamoDTO libroPrestamoRequest, @PathVariable int indice) {
+        libroService.devolverLibro(authentication.getName(), libroPrestamoRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/reservar")
+    public ResponseEntity<Void> reservarLibro(Authentication authentication, @Valid @RequestBody LibroReservaRequestDTO reserva) {
+        libroService.reservarLibro(authentication.getName(), reserva);
+        return ResponseEntity.noContent().build();
     }
 }

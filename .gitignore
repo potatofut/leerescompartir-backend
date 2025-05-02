@@ -33,4 +33,4 @@ build/
 .vscode/
 
 # No versionar momentáneamente
-!**/src/main/resources/application.properties
+/src/main/resources/application.properties

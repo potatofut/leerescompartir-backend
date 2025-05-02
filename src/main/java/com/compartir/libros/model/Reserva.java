@@ -9,6 +9,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reserva {
-    private Date fecha;
-    private String usuario_id;
+    private Date fechaReserva;
+    private Date fechaPrestamo;
+    private Date fechaDevolucion;
+    private String emailUsuario;
 }

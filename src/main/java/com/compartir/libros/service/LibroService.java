@@ -7,15 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.compartir.libros.dto.libro.CambioEstadoRequest;
 import com.compartir.libros.dto.libro.LibroDTO;
+import com.compartir.libros.dto.libro.LibroPrestamoDTO;
 import com.compartir.libros.dto.libro.LibroRequestDTO;
+import com.compartir.libros.dto.libro.LibroReservaRequestDTO;
 import com.compartir.libros.dto.libro.LibroResponseDTO;
 import com.compartir.libros.model.Libro;
+import com.compartir.libros.model.Reserva;
 import com.compartir.libros.model.Tematica;
 import com.compartir.libros.model.Usuario;
 import com.compartir.libros.repository.TematicaRepository;
 import com.compartir.libros.repository.UsuarioRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -114,30 +118,50 @@ public class LibroService {
         return convertirALibroResponseDTO(libro);
     }
 
-    public List<LibroDTO> buscarLibrosPorTematica(String tematicaId, String estado, String pais, String provincia, String ciudad) {
+    public List<LibroDTO> filtrarLibros(String tematicaId, String estado, String pais, String provincia, String ciudad) {
         List<Usuario> usuarios;
-        ObjectId tematicaObjectId = new ObjectId(tematicaId);
-
-        // Filtrar por región y estado si se especifican
-        if (estado != null && !estado.equalsIgnoreCase("todos")) {
-            if (pais != null && !pais.equalsIgnoreCase("todos")) {
-                usuarios = usuarioRepository.findByRegionPaisAndLibrosTematicasAndEstado(pais, tematicaObjectId, estado);
+        ObjectId tematicaObjectId = tematicaId != null ? new ObjectId(tematicaId) : null;
+    
+        // Si no hay temática especificada, obtener todos los usuarios
+        if (tematicaId == null) {
+            if (estado != null && !estado.equalsIgnoreCase("todos")) {
+                if (pais != null && !pais.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionPaisAndLibrosEstado(pais, estado);
+                } else {
+                    usuarios = usuarioRepository.findByLibrosEstado(estado);
+                }
             } else {
-                usuarios = usuarioRepository.findByLibrosTematicasAndEstado(tematicaObjectId, estado);
+                if (pais != null && !pais.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionPais(pais);
+                } else if (provincia != null && !provincia.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionProvincia(provincia);
+                } else if (ciudad != null && !ciudad.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionCiudad(ciudad);
+                } else {
+                    usuarios = usuarioRepository.findAll();
+                }
             }
         } else {
-            // Solo filtrar por región
-            if (pais != null && !pais.equalsIgnoreCase("todos")) {
-                usuarios = usuarioRepository.findByRegionPaisAndLibrosTematicas(pais, tematicaObjectId);
-            } else if (provincia != null && !provincia.equalsIgnoreCase("todos")) {
-                usuarios = usuarioRepository.findByRegionProvinciaAndLibrosTematicas(provincia, tematicaObjectId);
-            } else if (ciudad != null && !ciudad.equalsIgnoreCase("todos")) {
-                usuarios = usuarioRepository.findByRegionCiudadAndLibrosTematicas(ciudad, tematicaObjectId);
+            // Mantener la lógica existente para cuando hay temática especificada
+            if (estado != null && !estado.equalsIgnoreCase("todos")) {
+                if (pais != null && !pais.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionPaisAndLibrosTematicasAndEstado(pais, tematicaObjectId, estado);
+                } else {
+                    usuarios = usuarioRepository.findByLibrosTematicasAndEstado(tematicaObjectId, estado);
+                }
             } else {
-                usuarios = usuarioRepository.findByLibrosTematicas(tematicaObjectId);
+                if (pais != null && !pais.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionPaisAndLibrosTematicas(pais, tematicaObjectId);
+                } else if (provincia != null && !provincia.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionProvinciaAndLibrosTematicas(provincia, tematicaObjectId);
+                } else if (ciudad != null && !ciudad.equalsIgnoreCase("todos")) {
+                    usuarios = usuarioRepository.findByRegionCiudadAndLibrosTematicas(ciudad, tematicaObjectId);
+                } else {
+                    usuarios = usuarioRepository.findByLibrosTematicas(tematicaObjectId);
+                }
             }
         }
-
+    
         return convertirALibrosDTO(usuarios, tematicaId, estado);
     }
 
@@ -177,7 +201,7 @@ public class LibroService {
                                             .map(ObjectId::toHexString)
                                             .toList(),
                         libro.getReservas(),
-                        usuario.getNombre(),
+                        usuario.getEmail(),
                         usuario.getRegion().getCiudad(),
                         usuario.getRegion().getProvincia(),
                         usuario.getRegion().getPais()
@@ -202,5 +226,93 @@ public class LibroService {
                 .toList(),
             libro.getReservas()
         );
+    }
+
+    public List<LibroPrestamoDTO> obtenerLibrosPrestados(String email) {
+        List<Usuario> todosUsuarios = usuarioRepository.findAll();
+        List<LibroPrestamoDTO> librosPrestados = new ArrayList<>();
+
+        for (Usuario usuario : todosUsuarios) {
+            for (Libro libro : usuario.getLibros()) {
+                if ((libro.getEstado().equals("prestado") || libro.getEstado().equals("reservado")) &&
+                    libro.getReservas() != null && !libro.getReservas().isEmpty()) {
+                    
+                    // Get the most recent reservation for this book
+                    Reserva ultimaReserva = libro.getReservas().get(libro.getReservas().size() - 1);
+                    
+                    if (ultimaReserva.getEmailUsuario().equals(email) && 
+                        ultimaReserva.getFechaDevolucion() == null) {
+                        
+                        LibroPrestamoDTO libroDTO = new LibroPrestamoDTO(
+                            libro.getTitulo(),
+                            libro.getAutor(),
+                            libro.getDescripcion(),
+                            libro.getPortada(),
+                            libro.getEstado(),
+                            ultimaReserva.getEmailUsuario(),
+                            ultimaReserva.getFechaReserva(),
+                            ultimaReserva.getFechaPrestamo(),
+                            ultimaReserva.getFechaDevolucion()
+                        );
+                        librosPrestados.add(libroDTO);
+                    }
+                }
+            }
+        }
+
+        return librosPrestados;
+    }
+
+    public void devolverLibro(String name, LibroPrestamoDTO libroPrestamoRequest) {
+        Usuario usuario = usuarioRepository.findByEmail(name)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        for (Libro libro : usuario.getLibros()) {
+            if (libro.getTitulo().equals(libroPrestamoRequest.getTitulo())) {
+                for (Reserva reserva : libro.getReservas()) {
+                    if (reserva.getEmailUsuario().equals(name) && 
+                        reserva.getFechaDevolucion() == null) {
+                        
+                        reserva.setFechaDevolucion(new Date());
+                        libro.setEstado("disponible");
+                        usuarioRepository.save(usuario);
+                        return;
+                    }
+                }
+            }
+        }
+
+        throw new RuntimeException("No se encontró el libro o la reserva no es válida.");
+    }
+
+    public void reservarLibro(String email, LibroReservaRequestDTO reserva) {
+        // Buscar al usuario dueño del libro
+        Usuario usuarioPropietario = usuarioRepository.findByEmail(reserva.getEmailUsuario())
+            .orElseThrow(() -> new RuntimeException("Propietario del libro no encontrado"));
+    
+        // Encontrar el libro en la lista de libros del usuario
+        Libro libroAReservar = usuarioPropietario.getLibros().stream()
+            .filter(libro -> libro.getTitulo().equals(reserva.getTitulo()))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
+    
+        // Verificar que el libro esté disponible
+        if (!libroAReservar.getEstado().equals("disponible")) {
+            throw new RuntimeException("El libro no está disponible para reservar");
+        }
+    
+        // Crear nueva reserva
+        Reserva nuevaReserva = new Reserva();
+        nuevaReserva.setFechaReserva(new Date());
+        nuevaReserva.setEmailUsuario(email);
+        nuevaReserva.setFechaPrestamo(null);
+        nuevaReserva.setFechaDevolucion(null);
+    
+        // Añadir la reserva al libro y actualizar su estado
+        libroAReservar.getReservas().add(nuevaReserva);
+        libroAReservar.setEstado("reservado");
+    
+        // Guardar los cambios
+        usuarioRepository.save(usuarioPropietario);
     }
 }

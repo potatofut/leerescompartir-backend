@@ -46,4 +46,24 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     // Búsqueda combinada por región y estado
     @Query("{ 'region.pais': ?0, 'libros.tematicas': ?1, 'libros.estado': ?2 }")
     List<Usuario> findByRegionPaisAndLibrosTematicasAndEstado(String pais, ObjectId tematicaId, String estado);
+
+    // Búsqueda por estado del libro
+    @Query("{ 'libros.estado': ?0 }")
+    List<Usuario> findByLibrosEstado(String estado);
+
+    // Búsqueda por país
+    @Query("{ 'region.pais': ?0 }")
+    List<Usuario> findByRegionPais(String pais);
+
+    // Búsqueda por provincia
+    @Query("{ 'region.provincia': ?0 }")
+    List<Usuario> findByRegionProvincia(String provincia);
+
+    // Búsqueda por ciudad
+    @Query("{ 'region.ciudad': ?0 }")
+    List<Usuario> findByRegionCiudad(String ciudad);
+
+    // Búsqueda combinada por país y estado del libro
+    @Query("{ 'region.pais': ?0, 'libros.estado': ?1 }")
+    List<Usuario> findByRegionPaisAndLibrosEstado(String pais, String estado);
 }
