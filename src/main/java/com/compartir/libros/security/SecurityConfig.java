@@ -32,7 +32,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico").permitAll()
 
-                .requestMatchers("/api/libros/tematica/**", "/api/libros/buscar/**", "/api/tematicas/**").permitAll()
+                .requestMatchers("/api/libros/tematica/**", "/api/libros/buscar/**", "/api/libros/filtrar/**", "/api/tematicas/**").permitAll()
             
                 .requestMatchers("/api/usuarios/login", "/api/usuarios/registro").permitAll()
             
