@@ -82,7 +82,7 @@ public class LibroController {
     }
 
     @PostMapping("/devolver")
-    public ResponseEntity<Void> devolverLibro(Authentication authentication, @Valid @RequestBody LibroPrestamoDTO libroPrestamoRequest, @PathVariable int indice) {
+    public ResponseEntity<Void> devolverLibro(Authentication authentication, @Valid @RequestBody LibroReservaRequestDTO libroPrestamoRequest) {
         libroService.devolverLibro(authentication.getName(), libroPrestamoRequest);
         return ResponseEntity.noContent().build();
     }

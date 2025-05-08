@@ -249,7 +249,7 @@ public class LibroService {
                             libro.getDescripcion(),
                             libro.getPortada(),
                             libro.getEstado(),
-                            ultimaReserva.getEmailUsuario(),
+                            usuario.getEmail(),
                             ultimaReserva.getFechaReserva(),
                             ultimaReserva.getFechaPrestamo(),
                             ultimaReserva.getFechaDevolucion()
@@ -263,9 +263,9 @@ public class LibroService {
         return librosPrestados;
     }
 
-    public void devolverLibro(String name, LibroPrestamoDTO libroPrestamoRequest) {
-        Usuario usuario = usuarioRepository.findByEmail(name)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public void devolverLibro(String name, LibroReservaRequestDTO libroPrestamoRequest) {
+        Usuario usuario = usuarioRepository.findByEmail(libroPrestamoRequest.getEmailUsuario())
+            .orElseThrow(() -> new RuntimeException("El libro a devolver no está asociado a ningún usuario!"));
 
         for (Libro libro : usuario.getLibros()) {
             if (libro.getTitulo().equals(libroPrestamoRequest.getTitulo())) {
