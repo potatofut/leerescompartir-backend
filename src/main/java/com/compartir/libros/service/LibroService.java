@@ -114,6 +114,21 @@ public class LibroService {
         Libro libro = usuario.getLibros().get(indice);
         libro.setEstado(nuevoEstado);
 
+        if(nuevoEstado.equals("prestado")) {
+            libro.getReservas().forEach(reserva -> {
+                if(reserva.getFechaPrestamo() == null) {
+                    reserva.setFechaPrestamo(new Date());
+                }
+            });
+        }
+        else if(nuevoEstado.equals("disponible")) {
+            libro.getReservas().forEach(reserva -> {
+                if(reserva.getFechaDevolucion() == null) {
+                    reserva.setFechaDevolucion(new Date());
+                }
+            });
+        }
+
         usuarioRepository.save(usuario);
         return convertirALibroResponseDTO(libro);
     }
@@ -165,19 +180,12 @@ public class LibroService {
         return convertirALibrosDTO(usuarios, tematicaId, estado);
     }
 
-    public List<LibroDTO> buscarLibrosPorTitulo(String titulo) {
-        List<Usuario> usuarios = usuarioRepository.findByLibrosTituloContainingIgnoreCase(titulo);
+    public List<LibroDTO> buscarLibros(String searchString) {
+        List<Usuario> usuarios = usuarioRepository.findByLibrosTituloOrAutorContainingIgnoreCase(searchString);
         List<LibroDTO> libros = convertirALibrosDTO(usuarios, null, null);
         return libros.stream()
-            .filter(libro -> libro.getTitulo().toLowerCase().contains(titulo.toLowerCase()))
-            .toList();
-    }
-
-    public List<LibroDTO> buscarLibrosPorAutor(String autor) {
-        List<Usuario> usuarios = usuarioRepository.findByLibrosAutorContainingIgnoreCase(autor);
-        List<LibroDTO> libros = convertirALibrosDTO(usuarios, null, null);
-        return libros.stream()
-            .filter(libro -> libro.getAutor().toLowerCase().contains(autor.toLowerCase()))
+            .filter(libro -> libro.getTitulo().toLowerCase().contains(searchString.toLowerCase()) ||
+                             libro.getAutor().toLowerCase().contains(searchString.toLowerCase()))
             .toList();
     }
 

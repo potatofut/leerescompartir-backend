@@ -19,13 +19,9 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     @Query("{ 'libros.tematicas': ?0 }")
     List<Usuario> findByLibrosTematicas(ObjectId tematicaId);
     
-    // Búsqueda de libros por título (usando regex para búsqueda parcial)
-    @Query("{ 'libros.titulo': { $regex: ?0, $options: 'i' } }")
-    List<Usuario> findByLibrosTituloContainingIgnoreCase(String titulo);
-    
-    // Búsqueda de libros por autor (usando regex para búsqueda parcial)
-    @Query("{ 'libros.autor': { $regex: ?0, $options: 'i' } }")
-    List<Usuario> findByLibrosAutorContainingIgnoreCase(String autor);
+    // Búsqueda de libros por título o autor (usando regex para búsqueda parcial)
+    @Query("{ $or: [ {'libros.titulo': { $regex: ?0, $options: 'i' }}, {'libros.autor': { $regex: ?0, $options: 'i' }} ] }")
+    List<Usuario> findByLibrosTituloOrAutorContainingIgnoreCase(String searchString);
     
     // Búsqueda combinada por temática y estado
     @Query("{ 'libros.tematicas': ?0, 'libros.estado': ?1 }")

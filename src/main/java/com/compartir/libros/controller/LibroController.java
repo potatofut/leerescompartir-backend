@@ -66,14 +66,9 @@ public class LibroController {
         return ResponseEntity.ok(libroService.filtrarLibros(tematicaId, estado, pais, provincia, ciudad));
     }
 
-    @GetMapping("/buscar/titulo")
-    public ResponseEntity<List<LibroDTO>> buscarLibrosPorTitulo(@RequestParam String titulo) {
-        return ResponseEntity.ok(libroService.buscarLibrosPorTitulo(titulo));
-    }
-
-    @GetMapping("/buscar/autor")
-    public ResponseEntity<List<LibroDTO>> buscarLibrosPorAutor(@RequestParam String autor) {
-        return ResponseEntity.ok(libroService.buscarLibrosPorAutor(autor));
+    @GetMapping("/buscar")
+    public ResponseEntity<List<LibroDTO>> buscarLibrosPorTitulo(@RequestParam String query) {
+        return ResponseEntity.ok(libroService.buscarLibros(query));
     }
 
     @GetMapping("/prestados")
