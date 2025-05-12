@@ -38,7 +38,15 @@ public class UsuarioService {
             usuario.getId(), 
             usuario.getNombre(), 
             usuario.getEmail(),
-            usuario.getImagen()
+            usuario.getImagen(),
+            usuario.getCp(),
+            usuario.getTelefono(),
+            usuario.getBiografia(),
+            usuario.getIntereses(),
+            usuario.getRegion().getCiudad(),
+            usuario.getRegion().getProvincia(),
+            usuario.getRegion().getPais(),
+            usuario.getRegion().getContinente()
         );
     }
 
@@ -93,6 +101,19 @@ public class UsuarioService {
                 // No actualizamos la imagen si no tiene formato válido
             }
         }
+
+        usuario.setCp(request.getCp());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setBiografia(request.getBiografia());
+        usuario.setIntereses(request.getIntereses());
+
+        RegionUsuario region = new RegionUsuario(
+            request.getCiudad(),
+            request.getProvincia(),
+            request.getPais(),
+            request.getContinente()
+        );
+        usuario.setRegion(region);
 
         return usuarioRepository.save(usuario);
     }

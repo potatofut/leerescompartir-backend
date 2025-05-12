@@ -19,6 +19,10 @@ public class Usuario {
     private String email;
     private String password;
     private String imagen;
+    private String cp;
+    private String telefono;
+    private String biografia;
+    private String intereses;
     private RegionUsuario region;
     private List<Libro> libros = new ArrayList<>();
 }

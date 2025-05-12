@@ -14,4 +14,14 @@ public class UsuarioUpdateRequestDTO {
     private String email;
 
     private String imagen;
+
+    private String cp;
+    private String telefono;
+    private String biografia;
+    private String intereses;
+
+    private String ciudad;
+    private String provincia;
+    private String pais;
+    private String continente;
 }
