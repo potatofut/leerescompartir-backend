@@ -17,6 +17,13 @@ import com.compartir.libros.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Servicio que gestiona todas las operaciones relacionadas con los usuarios.
+ * Incluye funcionalidades para autenticación, registro, actualización de datos
+ * y gestión de contraseñas.
+ *
+ * @author Sergio
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,6 +32,13 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Autentica a un usuario y devuelve sus datos.
+     *
+     * @param loginRequest Datos de inicio de sesión
+     * @return Datos del usuario autenticado
+     * @throws RuntimeException si el usuario no existe o la contraseña es incorrecta
+     */
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
 
         Usuario usuario = usuarioRepository.findByEmail(loginRequest.getEmail())
@@ -50,6 +64,13 @@ public class UsuarioService {
         );
     }
 
+    /**
+     * Registra un nuevo usuario en el sistema.
+     *
+     * @param registroRequest Datos del nuevo usuario
+     * @return Usuario registrado
+     * @throws RuntimeException si el email ya está registrado
+     */
     public Usuario registro(RegistroRequestDTO registroRequest) {
         if (usuarioRepository.existsByEmail(registroRequest.getEmail())) {
             throw new RuntimeException("El email ya está registrado");
@@ -72,6 +93,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param email Email del usuario
+     * @param request Datos para el cambio de contraseña
+     * @throws RuntimeException si el usuario no existe o la contraseña actual es incorrecta
+     */
     public void cambiarPassword(String email, CambioPasswordRequestDTO request) {
         Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -84,6 +112,14 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    /**
+     * Actualiza los datos de un usuario existente.
+     *
+     * @param email Email del usuario a actualizar
+     * @param request Nuevos datos del usuario
+     * @return Usuario actualizado
+     * @throws RuntimeException si el usuario no existe
+     */
     public Usuario actualizarUsuario(String email, UsuarioUpdateRequestDTO request) {
         Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -118,6 +154,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    /**
+     * Obtiene un usuario por su email.
+     *
+     * @param email Email del usuario
+     * @return Usuario encontrado
+     * @throws RuntimeException si el usuario no existe
+     */
     public Usuario obtenerUsuarioPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

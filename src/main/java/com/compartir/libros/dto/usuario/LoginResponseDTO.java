@@ -3,6 +3,12 @@ package com.compartir.libros.dto.usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * DTO que representa la respuesta del inicio de sesión.
+ * Contiene la información del usuario autenticado.
+ *
+ * @author Sergio
+ */
 @Data
 @AllArgsConstructor
 public class LoginResponseDTO {

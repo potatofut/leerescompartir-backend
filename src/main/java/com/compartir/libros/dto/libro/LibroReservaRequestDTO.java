@@ -6,6 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la solicitud de reserva de un libro.
+ * Incluye validaciones para el email y el título del libro.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

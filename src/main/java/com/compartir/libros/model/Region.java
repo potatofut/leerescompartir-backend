@@ -9,6 +9,12 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Modelo que representa una región o continente en la base de datos.
+ * Incluye traducciones y referencias a datos externos.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

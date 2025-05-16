@@ -7,6 +7,12 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+/**
+ * Modelo que representa un libro en la base de datos.
+ * Incluye información básica del libro, su estado y referencias a temáticas y reservas.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controlador REST para gestionar las operaciones relacionadas con regiones geográficas.
+ * Proporciona endpoints para obtener información sobre continentes, países, provincias y ciudades.
+ *
+ * @author Sergio
+ */
 @RestController
 @RequestMapping("/api/regiones")
 public class RegionController {
@@ -20,7 +26,8 @@ public class RegionController {
     }
 
     /**
-     * Endpoint para obtener todos los nombres de continentes
+     * Obtiene la lista de todos los continentes disponibles.
+     *
      * @return Lista de nombres de continentes
      */
     @GetMapping("/continentes")
@@ -30,7 +37,8 @@ public class RegionController {
     }
 
     /**
-     * Endpoint para obtener todos los nombres de países de un continente específico
+     * Obtiene la lista de países pertenecientes a un continente específico.
+     *
      * @param nombreContinente Nombre del continente
      * @return Lista de nombres de países
      */
@@ -41,7 +49,8 @@ public class RegionController {
     }
 
     /**
-     * Endpoint para obtener todos los nombres de provincias de un país específico
+     * Obtiene la lista de provincias pertenecientes a un país específico.
+     *
      * @param nombreContinente Nombre del continente
      * @param nombrePais Nombre del país
      * @return Lista de nombres de provincias
@@ -55,7 +64,8 @@ public class RegionController {
     }
 
     /**
-     * Endpoint para obtener todos los nombres de ciudades de una provincia específica
+     * Obtiene la lista de ciudades pertenecientes a una provincia específica.
+     *
      * @param nombreContinente Nombre del continente
      * @param nombrePais Nombre del país
      * @param nombreProvincia Nombre de la provincia

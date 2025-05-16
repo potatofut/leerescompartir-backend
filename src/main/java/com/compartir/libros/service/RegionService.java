@@ -14,6 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Servicio que gestiona las operaciones relacionadas con las regiones geográficas.
+ * Proporciona funcionalidades para obtener información sobre continentes, países,
+ * provincias y ciudades de manera jerárquica.
+ *
+ * @author Sergio
+ */
 @Service
 public class RegionService {
 
@@ -24,6 +31,14 @@ public class RegionService {
 
     private static final String PROVINCE_TYPE = "province";
 
+    /**
+     * Constructor del servicio de regiones.
+     *
+     * @param regionRepository Repositorio de regiones
+     * @param countryRepository Repositorio de países
+     * @param stateRepository Repositorio de provincias
+     * @param cityRepository Repositorio de ciudades
+     */
     public RegionService(RegionRepository regionRepository, 
                         PaisRepository countryRepository,
                         ProvinciaRepository stateRepository, 
@@ -48,6 +63,7 @@ public class RegionService {
      * Obtiene todos los nombres de países de un continente específico
      * @param nombreContinente Nombre del continente
      * @return Lista de nombres de países del continente
+     * @throws IllegalArgumentException si el continente no existe
      */
     public List<String> obtenerPaisesPorContinente(String nombreContinente) {
         // Buscar el continente por nombre
@@ -65,6 +81,7 @@ public class RegionService {
      * @param nombreContinente Nombre del continente
      * @param nombrePais Nombre del país
      * @return Lista de nombres de provincias del país
+     * @throws IllegalArgumentException si el continente o país no existen, o si el país no pertenece al continente
      */
     public List<String> obtenerProvinciasPorPais(String nombreContinente, String nombrePais) {
         // Buscar el continente por nombre
@@ -93,6 +110,7 @@ public class RegionService {
      * @param nombrePais Nombre del país
      * @param nombreProvincia Nombre de la provincia
      * @return Lista de nombres de ciudades de la provincia
+     * @throws IllegalArgumentException si el continente, país o provincia no existen, o si no pertenecen a la jerarquía correcta
      */
     public List<String> obtenerCiudadesPorProvincia(String nombreContinente, String nombrePais, String nombreProvincia) {
         // Buscar el continente por nombre

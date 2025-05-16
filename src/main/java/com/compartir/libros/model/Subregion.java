@@ -10,6 +10,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Modelo que representa una subregión en la base de datos.
+ * Incluye información sobre la región a la que pertenece y traducciones.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,5 +34,4 @@ public class Subregion {
     
     private Map<String, String> translations;
     private String wikiDataId;
-
 }

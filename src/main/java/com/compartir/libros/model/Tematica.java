@@ -8,6 +8,12 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Modelo que representa una temática de libro en la base de datos.
+ * Incluye información básica como nombre, imagen y descripción.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

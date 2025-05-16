@@ -10,6 +10,28 @@ import com.compartir.libros.model.Usuario;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio para la gestión de usuarios en la base de datos MongoDB.
+ * Proporciona métodos para consultar usuarios y sus libros por diferentes criterios.
+ * 
+ * Métodos disponibles:
+ * - findByEmail: Busca un usuario por su email
+ * - existsByEmail: Verifica si existe un usuario con un email específico
+ * - findByLibrosTematicas: Busca usuarios que tienen libros de una temática específica
+ * - findByLibrosTituloOrAutorContainingIgnoreCase: Busca usuarios que tienen libros por título o autor
+ * - findByLibrosTematicasAndEstado: Busca usuarios que tienen libros de una temática y estado específicos
+ * - findByRegionPaisAndLibrosTematicas: Busca usuarios por país y temática de libros
+ * - findByRegionProvinciaAndLibrosTematicas: Busca usuarios por provincia y temática de libros
+ * - findByRegionCiudadAndLibrosTematicas: Busca usuarios por ciudad y temática de libros
+ * - findByRegionPaisAndLibrosTematicasAndEstado: Busca usuarios por país, temática y estado de libros
+ * - findByLibrosEstado: Busca usuarios que tienen libros en un estado específico
+ * - findByRegionPais: Busca usuarios por país
+ * - findByRegionProvincia: Busca usuarios por provincia
+ * - findByRegionCiudad: Busca usuarios por ciudad
+ * - findByRegionPaisAndLibrosEstado: Busca usuarios por país y estado de libros
+ *
+ * @author Sergio
+ */
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     Optional<Usuario> findByEmail(String email);

@@ -7,6 +7,12 @@ import java.util.List;
 
 import com.compartir.libros.model.Reserva;
 
+/**
+ * DTO que representa un libro con toda su información detallada.
+ * Incluye información del libro, sus temáticas, reservas y datos del usuario propietario.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

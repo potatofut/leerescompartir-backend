@@ -4,6 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * DTO para la solicitud de cambio de contraseña de un usuario.
+ * Incluye validaciones para asegurar la seguridad de la contraseña.
+ *
+ * @author Sergio
+ */
 @Data
 public class CambioPasswordRequestDTO {
     @NotBlank(message = "La contraseña actual no puede estar vacía")

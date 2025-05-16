@@ -12,11 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Servicio encargado de gestionar las operaciones relacionadas con las temáticas de libros.
- * Proporciona métodos para obtener todas las temáticas o una temática específica por su identificador.
- * 
- * <p>Este servicio actúa como intermediario entre el controlador y el repositorio de temáticas.</p>
- * 
+ * Servicio que gestiona las operaciones relacionadas con las temáticas de libros.
+ * Proporciona funcionalidades para obtener y consultar las diferentes temáticas
+ * disponibles en el sistema.
+ *
  * @author Sergio
  */
 @Service
@@ -29,7 +28,7 @@ public class TematicaService {
     /**
      * Obtiene todas las temáticas disponibles en el sistema.
      *
-     * @return una lista de {@link TematicaDTO} que representa todas las temáticas almacenadas.
+     * @return Lista de temáticas en formato DTO
      */
     public List<TematicaDTO> obtenerTodasTematicas() {
         return tematicaRepository.findAll().stream()
@@ -43,11 +42,11 @@ public class TematicaService {
     }
 
     /**
-     * Obtiene una temática específica según su identificador.
+     * Obtiene una temática específica por su identificador.
      *
-     * @param id el identificador único de la temática en formato {@code String}.
-     * @return una instancia de {@link TematicaDTO} con los datos de la temática correspondiente.
-     * @throws RuntimeException si no se encuentra una temática con el identificador proporcionado.
+     * @param id Identificador de la temática
+     * @return Temática encontrada en formato DTO
+     * @throws RuntimeException si no se encuentra la temática
      */
     public TematicaDTO obtenerTematicaPorId(String id) {
         Tematica tematica = tematicaRepository.findById(new ObjectId(id))

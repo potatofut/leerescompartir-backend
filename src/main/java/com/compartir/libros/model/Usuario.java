@@ -8,6 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Modelo que representa un usuario en la base de datos.
+ * Incluye información personal, ubicación y lista de libros del usuario.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

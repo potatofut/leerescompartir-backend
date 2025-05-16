@@ -11,6 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Modelo que representa una ciudad en la base de datos.
+ * Incluye información geográfica y referencias a su provincia y país.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,6 +56,10 @@ public class Ciudad {
     
     private Location location;
 
+    /**
+     * Clase interna que representa la ubicación geográfica de la ciudad.
+     * Utiliza coordenadas para almacenar la posición exacta.
+     */
     public static class Location {
         private String type;
         private List<Double> coordinates;

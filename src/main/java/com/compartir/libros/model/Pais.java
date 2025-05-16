@@ -12,6 +12,12 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Modelo que representa un país en la base de datos.
+ * Incluye información detallada como códigos, moneda, capital y referencias a regiones.
+ *
+ * @author Sergio
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,7 +57,10 @@ public class Pais {
     private String emoji;
     private String emojiU;
 
-    // Inner class for timezone
+    /**
+     * Clase interna que representa la información de zona horaria de un país.
+     * Incluye detalles como el nombre de la zona, offset GMT y abreviaturas.
+     */
     public static class Timezone {
         private String zoneName;
         private Integer gmtOffset;

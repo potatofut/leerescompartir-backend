@@ -6,6 +6,12 @@ import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
+/**
+ * DTO para la solicitud de creación o actualización de un libro.
+ * Incluye validaciones para los campos obligatorios.
+ *
+ * @author Sergio
+ */
 @Data
 public class LibroRequestDTO {
     @NotBlank(message = "El título no puede estar vacío")

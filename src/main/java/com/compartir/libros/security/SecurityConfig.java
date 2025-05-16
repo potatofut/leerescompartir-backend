@@ -17,6 +17,18 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Configuración de seguridad de la aplicación.
+ * Define las reglas de autenticación, autorización y CORS.
+ * 
+ * Características principales:
+ * - Configuración de endpoints públicos y protegidos
+ * - Configuración de CORS para permitir peticiones desde el frontend
+ * - Configuración del codificador de contraseñas
+ * - Configuración del gestor de autenticación
+ *
+ * @author Sergio
+ */
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -24,6 +36,14 @@ public class SecurityConfig {
 
     private final UsuarioDetallesService customUserDetailsService;
 
+    /**
+     * Configura la cadena de filtros de seguridad.
+     * Define los endpoints públicos y protegidos, y configura CORS.
+     *
+     * @param http Configuración de seguridad HTTP
+     * @return Cadena de filtros de seguridad configurada
+     * @throws Exception si hay un error en la configuración
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -48,9 +68,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Creates a password encoder bean for secure password hashing.
+     * Crea un codificador de contraseñas para el hash seguro de contraseñas.
      *
-     * @return BCryptPasswordEncoder instance
+     * @return Instancia de BCryptPasswordEncoder
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,12 +78,13 @@ public class SecurityConfig {
     }
 
     /**
-     * Configures the authentication manager with custom user details service and password encoder.
+     * Configura el gestor de autenticación con el servicio de detalles de usuario personalizado
+     * y el codificador de contraseñas.
      *
-     * @param http the HttpSecurity to configure
-     * @param passwordEncoder the password encoder to use
-     * @return configured AuthenticationManager
-     * @throws Exception if there's an error during configuration
+     * @param http Configuración de seguridad HTTP
+     * @param passwordEncoder Codificador de contraseñas a utilizar
+     * @return Gestor de autenticación configurado
+     * @throws Exception si hay un error durante la configuración
      */
     @Bean
     AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
@@ -77,6 +98,12 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
+    /**
+     * Configura el origen de configuración CORS para permitir peticiones desde el frontend.
+     * Permite métodos HTTP específicos y headers necesarios.
+     *
+     * @return Fuente de configuración CORS
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -13,17 +13,34 @@ import com.compartir.libros.service.TematicaService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para gestionar las operaciones relacionadas con las temáticas de los libros.
+ * Proporciona endpoints para consultar las temáticas disponibles.
+ *
+ * @author Sergio
+ */
 @RestController
 @RequestMapping("/api/tematicas")
 @RequiredArgsConstructor
 public class TematicaController {
     private final TematicaService tematicaService;
 
+    /**
+     * Obtiene la lista de todas las temáticas disponibles.
+     *
+     * @return Lista de temáticas
+     */
     @GetMapping
     public ResponseEntity<List<TematicaDTO>> obtenerTodasTematicas() {
         return ResponseEntity.ok(tematicaService.obtenerTodasTematicas());
     }
 
+    /**
+     * Obtiene una temática específica por su identificador.
+     *
+     * @param id Identificador de la temática
+     * @return Temática encontrada
+     */
     @GetMapping("/{id}")
     public ResponseEntity<TematicaDTO> obtenerTematicaPorId(@PathVariable String id) {
         return ResponseEntity.ok(tematicaService.obtenerTematicaPorId(id));

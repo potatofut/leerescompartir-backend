@@ -5,6 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * DTO para la solicitud de registro de un nuevo usuario.
+ * Incluye validaciones para todos los campos obligatorios y el formato del email.
+ *
+ * @author Sergio
+ */
 @Data
 public class RegistroRequestDTO {
     @NotBlank(message = "El nombre no puede estar vacío")

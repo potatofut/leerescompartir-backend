@@ -4,6 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO para la solicitud de inicio de sesión de un usuario.
+ * Incluye validaciones para el email y la contraseña.
+ *
+ * @author Sergio
+ */
 @Data
 public class LoginRequestDTO {
     @NotBlank(message = "El email no puede estar vacío")

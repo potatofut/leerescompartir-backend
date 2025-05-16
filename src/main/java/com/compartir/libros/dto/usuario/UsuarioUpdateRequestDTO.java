@@ -4,6 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO para la solicitud de actualización de datos de un usuario.
+ * Incluye validaciones para los campos obligatorios y el formato del email.
+ *
+ * @author Sergio
+ */
 @Data
 public class UsuarioUpdateRequestDTO {
     @NotBlank(message = "El nombre no puede estar vacío")
