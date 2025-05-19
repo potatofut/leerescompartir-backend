@@ -22,7 +22,6 @@ Backend de la aplicación web "Leer es compartir", una plataforma para compartir
 - **Spring Security** (Autenticación Basic Auth)
 - **Maven** (Gestión de dependencias)
 - **JUnit 5** + **Mockito** (Pruebas unitarias y de integración)
-- **Docker** (Contenerización)
 
 ## 📂 Estructura del proyecto
 
