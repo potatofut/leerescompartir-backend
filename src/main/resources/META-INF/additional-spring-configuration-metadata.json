@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "spring.google.client-id",
+    "type": "java.lang.String",
+    "description": "GMail OAuth2 ClientID"
+  },
+  {
+    "name": "spring.google.client-secret",
+    "type": "java.lang.String",
+    "description": "GMail OAuth2 Client Secret"
+  },
+  {
+    "name": "spring.google.refresh-token",
+    "type": "java.lang.String",
+    "description": "GMail OAuth2 refresh token"
+  },
+  {
+    "name": "spring.google.from-email",
+    "type": "java.lang.String",
+    "description": "Email from where the messages are sent"
+  }
+]}
