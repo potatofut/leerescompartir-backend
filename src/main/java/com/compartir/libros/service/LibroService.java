@@ -34,6 +34,7 @@ import java.util.List;
 public class LibroService {
   private final UsuarioRepository usuarioRepository;
   private final TematicaRepository tematicaRepository;
+  private final GmailAPIService gmailAPIService;
 
   /**
    * Obtiene todos los libros de un usuario específico.
@@ -424,6 +425,15 @@ public class LibroService {
     // Añadir la reserva al libro y actualizar su estado
     libroAReservar.getReservas().add(nuevaReserva);
     libroAReservar.setEstado("reservado");
+
+    //Enviar correo de confirmación al propietario
+    String subject = "Reserva de libro: " + reserva.getTitulo();
+    String body = "El libro '" + reserva.getTitulo() + "' ha sido reservado por " + email;
+    try {
+      gmailAPIService.sendMessage(usuarioPropietario.getEmail(), subject, body, null);
+    } catch (Exception e) {
+      throw new RuntimeException("Error al enviar el correo de confirmación: " + e.getMessage());
+    }
 
     // Guardar los cambios
     usuarioRepository.save(usuarioPropietario);
