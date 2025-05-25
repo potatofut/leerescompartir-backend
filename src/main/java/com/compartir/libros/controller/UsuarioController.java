@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.compartir.libros.dto.usuario.CambioPasswordRequestDTO;
@@ -57,6 +58,16 @@ public class UsuarioController {
     public ResponseEntity<Usuario> registro(@Valid @RequestBody RegistroRequestDTO registroRequest) {
         log.debug("Recibida solicitud de registro para: {}", registroRequest.getEmail());
         return new ResponseEntity<>(usuarioService.registro(registroRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/verificar")
+    public ResponseEntity<String> verificarEmail(@RequestParam String token) {
+        try {
+            usuarioService.verifyUser(token);
+            return ResponseEntity.ok("Email verificado exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**

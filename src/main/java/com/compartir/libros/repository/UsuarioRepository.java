@@ -118,4 +118,6 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
   @Query("{ 'region.pais': ?0, 'libros.estado': ?1 }")
   List<Usuario> findByRegionAndLibrosEstado(String pais, String estado);
+
+  Optional<Usuario> findByVerificationToken(String token);
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,5 +32,11 @@ public class Usuario {
     private String biografia;
     private String intereses;
     private RegionUsuario region;
+    
+    private String verificationToken;
+    private LocalDateTime tokenGeneratedAt;
+    private LocalDateTime tokenVerifiedAt;
+    private Boolean isVerified = false;
+
     private List<Libro> libros = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package com.compartir.libros.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,8 @@ import com.compartir.libros.dto.usuario.UsuarioUpdateRequestDTO;
 import com.compartir.libros.model.RegionUsuario;
 import com.compartir.libros.model.Usuario;
 import com.compartir.libros.repository.UsuarioRepository;
+
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +34,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final GmailAPIService gmailAPIService;
 
     /**
      * Autentica a un usuario y devuelve sus datos.
@@ -46,6 +50,10 @@ public class UsuarioService {
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta.");
+        }
+
+        if (!usuario.getIsVerified()) {
+            throw new RuntimeException("Por favor verifica tu email antes de iniciar sesión");
         }
 
         return new LoginResponseDTO(
@@ -90,7 +98,50 @@ public class UsuarioService {
         usuario.setRegion(region);
         usuario.setLibros(new ArrayList<>());
 
-        return usuarioRepository.save(usuario);
+        // Generate verification token
+        generateVerificationToken(usuario);
+        
+        // Save user first to get the ID
+        usuario = usuarioRepository.save(usuario);
+
+        // Send verification email
+        try {
+            String verificationUrl = "http://localhost:3000/verificacion?token=" + usuario.getVerificationToken();
+            String emailBody = "Por favor verifica tu email haciendo clic en el siguiente enlace: <a href=\"" + verificationUrl + "\">Verificar Email</a>";
+            
+            gmailAPIService.sendMessage(
+                usuario.getEmail(),
+                "Verifica tu cuenta en Leer es Compartir",
+                emailBody,
+                null
+            );
+        } catch (Exception e) {
+            log.error("Error al enviar el email de verificación", e);
+        }
+
+        return usuario;
+    }
+
+    private void generateVerificationToken(Usuario usuario) {
+        String token = UUID.randomUUID().toString();
+        usuario.setVerificationToken(token);
+        usuario.setTokenGeneratedAt(LocalDateTime.now());
+        usuario.setIsVerified(false);
+    }
+
+    public boolean verifyUser(String token) {
+        Usuario usuario = usuarioRepository.findByVerificationToken(token)
+            .orElseThrow(() -> new RuntimeException("Token de verificación no válido"));
+        
+        // Check if token is expired (24 hours validity)
+        if (usuario.getTokenGeneratedAt().plusHours(24).isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token de verificación expirado");
+        }
+        
+        usuario.setIsVerified(true);
+        usuario.setTokenVerifiedAt(LocalDateTime.now());
+        usuarioRepository.save(usuario);
+        return true;
     }
 
     /**
