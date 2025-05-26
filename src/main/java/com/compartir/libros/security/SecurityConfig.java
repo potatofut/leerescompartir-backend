@@ -54,7 +54,7 @@ public class SecurityConfig {
 
                 .requestMatchers("/api/libros/tematica/**", "/api/libros/buscar/**", "/api/libros/filtrar/**", "/api/tematicas/**").permitAll()
             
-                .requestMatchers("/api/usuarios/login", "/api/usuarios/registro").permitAll()
+                .requestMatchers("/api/usuarios/login", "/api/usuarios/registro", "/api/usuarios/verificar").permitAll()
             
                 .requestMatchers("/api/libros/**", "/api/usuarios/**").authenticated()
 
