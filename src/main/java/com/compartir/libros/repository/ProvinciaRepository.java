@@ -20,6 +20,6 @@ import com.compartir.libros.model.Provincia;
  */
 @Repository
 public interface ProvinciaRepository extends MongoRepository<Provincia, Integer> {
-    List<Provincia> findByCountryIdAndTypeEquals(Integer countryId, String type);
-    Optional<Provincia> findByNameAndCountryIdAndTypeEquals(String name, Integer countryId, String type);
+    List<Provincia> findByCountryId(Integer countryId);
+    Optional<Provincia> findByNameAndCountryId(String name, Integer countryId);
 }

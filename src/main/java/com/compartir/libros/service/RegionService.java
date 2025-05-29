@@ -29,8 +29,6 @@ public class RegionService {
     private final ProvinciaRepository stateRepository;
     private final CiudadRepository cityRepository;
 
-    private static final String PROVINCE_TYPE = "province";
-
     /**
      * Constructor del servicio de regiones.
      *
@@ -99,7 +97,7 @@ public class RegionService {
         }
         
         // Buscar provincias por ID de país
-        return stateRepository.findByCountryIdAndTypeEquals(country.getId(), PROVINCE_TYPE).stream()
+        return stateRepository.findByCountryId(country.getId()).stream()
                 .map(Provincia::getName)
                 .collect(Collectors.toList());
     }
@@ -128,7 +126,7 @@ public class RegionService {
         }
         
         // Buscar la provincia por nombre y ID de país
-        Provincia state = stateRepository.findByNameAndCountryIdAndTypeEquals(nombreProvincia, country.getId(), PROVINCE_TYPE)
+        Provincia state = stateRepository.findByNameAndCountryId(nombreProvincia, country.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Provincia no encontrada: " + nombreProvincia + 
                                                               " en país " + nombrePais));
         
