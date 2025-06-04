@@ -30,8 +30,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/libros-0.0.1.jar"
           target: "~/"
-          timeout: 120
-
+          timeout: "120s"  # Tiempo de espera para la conexión (120 segundos)
+          command_timeout: "10m" 
+           # Tiempo de espera para el comando (10 minutos)
       - name: Verify upload
         uses: appleboy/ssh-action@v1.0.3
         with:
