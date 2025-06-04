@@ -99,6 +99,7 @@ public class RegionService {
         // Buscar provincias por ID de país
         return stateRepository.findByCountryId(country.getId()).stream()
                 .map(Provincia::getName)
+                .distinct()
                 .collect(Collectors.toList());
     }
 

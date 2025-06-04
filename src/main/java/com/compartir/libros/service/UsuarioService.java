@@ -106,7 +106,7 @@ public class UsuarioService {
 
         // Send verification email
         try {
-            String verificationUrl = "http://localhost:3000/verificacion?token=" + usuario.getVerificationToken();
+            String verificationUrl = "https:/www.leerescompartir.com/verificacion?token=" + usuario.getVerificationToken();
             String emailBody = "Por favor verifica tu email haciendo clic en el siguiente enlace: <a href=\"" + verificationUrl + "\">Verificar Email</a>";
             
             gmailAPIService.sendMessage(
