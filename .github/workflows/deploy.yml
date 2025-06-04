@@ -33,7 +33,7 @@ jobs:
           timeout: "120s"  # Tiempo de espera para la conexión (120 segundos)
           command_timeout: "10m" 
            # Tiempo de espera para el comando (10 minutos)
-      - name: Verify upload
+      - name: Verify uploaded JAR
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -42,7 +42,11 @@ jobs:
           script: |
             ls -la ~/libros-0.0.1.jar
             md5sum ~/libros-0.0.1.jar
-          timeout: 30
+          timeout: "30s"  # Nota: debe ser string con unidad de tiempo
+          port: 22
+          command_timeout: "10m"  # Nota: debe ser string con unidad de tiempo
+          proxy_port: 22
+          proxy_timeout: "30s"  # Nota: debe ser string con unidad de tiempo
 
       - name: Stop existing application
         uses: appleboy/ssh-action@v1.0.3
