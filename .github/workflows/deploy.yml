@@ -30,20 +30,83 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/libros-0.0.1.jar"
           target: "~/"
+          timeout: 120
 
-      - name: Deploy to EC2 via SSH
+      - name: Verify upload
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            (
-              pkill -f 'java -jar' || true
-              echo "GMAIL_API_CLIENT_ID=${{ secrets.GMAIL_API_CLIENT_ID }}" > ~/backend.env
-              echo "GMAIL_FROM_EMAIL=${{ secrets.GMAIL_FROM_EMAIL }}" >> ~/backend.env
-              echo "GMAIL_API_SECRET=${{ secrets.GMAIL_API_SECRET }}" >> ~/backend.env
-              echo "GMAIL_API_REFRESH_TOKEN=${{ secrets.GMAIL_API_REFRESH_TOKEN }}" >> ~/backend.env
-              export $(cat ~/backend.env | xargs)
-              nohup java -jar ~/libros-0.0.1.jar > ~/backend.log 2>&1 &
-            ) && exit 0
+            ls -la ~/libros-0.0.1.jar
+            md5sum ~/libros-0.0.1.jar
+          timeout: 30
+
+      - name: Stop existing application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Stopping any existing Java application..."
+            pkill -f 'java.*libros-0.0.1.jar' || echo "No process found to stop"
+            sleep 5
+            # Force kill if still running
+            pgrep -f 'java.*libros-0.0.1.jar' | xargs kill -9 || echo "No process to force kill"
+          timeout: 60
+
+      - name: Setup environment and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Creating environment file..."
+            cat <<EOF > ~/backend.env
+            GMAIL_API_CLIENT_ID=${{ secrets.GMAIL_API_CLIENT_ID }}
+            GMAIL_FROM_EMAIL=${{ secrets.GMAIL_FROM_EMAIL }}
+            GMAIL_API_SECRET=${{ secrets.GMAIL_API_SECRET }}
+            GMAIL_API_REFRESH_TOKEN=${{ secrets.GMAIL_API_REFRESH_TOKEN }}
+            EOF
+            
+            echo "Starting application..."
+            nohup bash -c 'export $(cat ~/backend.env | xargs) && java -jar ~/libros-0.0.1.jar' > ~/backend.log 2>&1 &
+            
+            echo "Waiting for application to start..."
+            sleep 15
+            
+            echo "Checking running processes..."
+            ps aux | grep java
+            
+            echo "Checking application logs..."
+            tail -n 20 ~/backend.log
+            
+            echo "Verifying application is running..."
+            APP_PID=$(pgrep -f 'java.*libros-0.0.1.jar')
+            if [ -z "$APP_PID" ]; then
+              echo "Application failed to start!"
+              exit 1
+            else
+              echo "Application started successfully with PID: $APP_PID"
+            end
+          timeout: 180
+
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Current Java processes:"
+            ps aux | grep java
+            
+            echo "Recent application logs:"
+            tail -n 30 ~/backend.log
+            
+            echo "Checking application port..."
+            sudo netstat -tulnp | grep java
+          timeout: 60
